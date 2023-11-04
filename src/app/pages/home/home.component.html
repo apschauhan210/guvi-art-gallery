@@ -1,0 +1,153 @@
+<div class="bg-white text-gray-600 work-sans leading-normal text-base tracking-normal">
+
+    <app-navbar></app-navbar>
+
+    <section class="w-full mx-auto bg-nordic-gray-light flex pt-12 md:pt-0 md:items-center bg-cover bg-right"
+        style="max-width:1600px; height: 32rem; background-image: url('https://images.pexels.com/photos/3459713/pexels-photo-3459713.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');">
+        <div class="container mx-auto">
+
+            <div class="flex flex-col w-full lg:w-1/2 justify-center items-start  px-6 tracking-wide">
+                <h1 class="text-black text-2xl my-4">Home to a collection of art that spans centuries and the globe.
+                </h1>
+                <!-- <a class="text-xl inline-block no-underline border-b border-gray-600 leading-relaxed hover:text-black hover:border-black"
+                    href="#">products</a> -->
+
+            </div>
+        </div>
+
+    </section>
+
+
+
+    <section class="bg-white py-8">
+
+        <div class="container mx-auto flex items-center justify-center flex-wrap pt-4 pb-12">
+
+            <nav id="store" class="w-full z-30 top-0 px-6 py-1">
+                <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 px-2 py-3">
+
+                    <a class="uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl "
+                        href="#">
+                        Antique Artworks
+                    </a>
+
+                    <div class="flex items-center" id="store-nav-content">
+
+                        <!-- <a class="pl-3 inline-block no-underline hover:text-black" href="#">
+                            <svg class="fill-current hover:text-black" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24">
+                                <path d="M7 11H17V13H7zM4 7H20V9H4zM10 15H14V17H10z" />
+                            </svg>
+                        </a> -->
+
+                        <!-- <a class="pl-3 inline-block no-underline hover:text-black" href="#">
+                            <svg class="fill-current hover:text-black" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" viewBox="0 0 24 24">
+                                <path
+                                    d="M10,18c1.846,0,3.543-0.635,4.897-1.688l4.396,4.396l1.414-1.414l-4.396-4.396C17.365,13.543,18,11.846,18,10 c0-4.411-3.589-8-8-8s-8,3.589-8,8S5.589,18,10,18z M10,4c3.309,0,6,2.691,6,6s-2.691,6-6,6s-6-2.691-6-6S6.691,4,10,4z" />
+                            </svg>
+                        </a> -->
+
+                        <div class="search-container">
+                            <form [formGroup]="searchForm">
+                                <input (ngModelChange)="updateArticles(1)" formControlName="searchInput" class="search rounded-l-lg expandright focus:border focus:border-gray-400 focus:bg-gray-50" id="searchright" type="search" name="q"
+                                    placeholder="Search">
+                                <label class="w-full rounded-r rounded-t rounded-b h-12 leading-[2.1] text-black font-bold text-center text-2xl inline-block absolute bg-gray-50 searchbutton focus:border-r focus:border-gray-400 active:border-r active:border-gray-400" for="searchright"><span
+                                        class="mglass">&#9906;</span></label>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </nav>
+
+            <div *ngFor="let artwork of artworks" class="w-full md:w-1/3 xl:w-1/4 p-6 flex flex-col">
+                <a routerLink="../art/{{artwork.id}}">
+                    <img class="hover:grow hover:shadow-2xl hover:scale-[1.03] overflow-hidden transition duration-300 rounded-md h-80 w-auto object-fill object-center"
+                        [src]="imageUrl + '/' + artwork.image_id + '/full/' + imageSize + ',/0/default.jpg'">
+                </a>
+                <div class="pt-3 flex items-center justify-between">
+                    <p class="">{{artwork.title.slice(0, 30)}}<ng-container
+                            *ngIf="artwork.title.length > 30">...</ng-container></p>
+                    <i *ngIf="!articleInWishList(artwork.id)" (click)="toggleArticleToWishList(artwork.id)"
+                        class="hover:cursor-pointer fa-regular fa-heart h-6 w-6 hover:scale-[1.20] transition duration-300"></i>
+                    <i *ngIf="articleInWishList(artwork.id)" (click)="toggleArticleToWishList(artwork.id)"
+                        class="hover:cursor-pointer fa-solid fa-heart h-6 w-6 hover:scale-[1.20] transition duration-300"></i>
+                </div>
+                <p class="pt-1 font-thin text-gray-900">{{artwork.artist_display.slice(0, 30)}}<ng-container
+                        *ngIf="artwork.artist_display.length > 30">...</ng-container></p>
+            </div>
+
+            <nav class="my-12" aria-label="Page navigation example">
+                <ul class="inline-flex -space-x-px text-base h-10">
+                    <li (click)="updateArticles(currentPage-1)" *ngIf="currentPage != 1">
+                        <button
+                            class="flex items-center justify-center px-4 h-10 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700  ">Previous</button>
+                    </li>
+                    <li>
+                        <button (click)="updateArticles(1)"
+                            [ngClass]="currentPage === 1 ? 'rounded-l-lg ' + activeClass : inactiveClass"
+                            class="flex items-center justify-center px-4 h-10 leading-tight border border-gray-300">1</button>
+                    </li>
+                    <li>
+                        <button (click)="updateArticles(2)" [ngClass]="currentPage === 2 ? activeClass : inactiveClass"
+                            class="flex items-center justify-center px-4 h-10 leading-tight border border-gray-300">2</button>
+                    </li>
+                    <li>
+                        <button *ngIf="currentPage !== 1 && currentPage !== 2 && currentPage !== 3"
+                            class="flex items-center justify-center px-4 h-10 leading-tight border text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700 border-gray-300">....</button>
+                    </li>
+                    <li>
+                        <button aria-current="page" *ngIf="currentPage !== 1 && currentPage !== 2"
+                            [ngClass]="[currentPage !== 1 && currentPage !== 2 ? activeClass : inactiveClass, !nextExists ? 'rounded-r-lg' : '']"
+                            class="flex items-center justify-center px-4 h-10 border border-gray-300">{{currentPage}}</button>
+                    </li>
+                    <li>
+                        <button
+                            *ngIf="nextExists"
+                            class="flex items-center justify-center px-4 h-10 leading-tight   border border-gray-300 text-gray-500 bg-white hover:bg-gray-100 hover:text-gray-700">....</button>
+                    </li>
+                    <!-- <li>
+                        <a href="#"
+                            class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700  ">5</a>
+                    </li> -->
+                    <li (click)="updateArticles(currentPage+1)">
+                        <button
+                            *ngIf="nextExists"
+                            class="flex items-center justify-center px-4 h-10 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700  ">Next</button>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+
+    </section>
+
+    <section class="bg-white py-8">
+
+        <div class="container py-8 px-6 mx-auto">
+
+            <a class="uppercase tracking-wide no-underline hover:no-underline font-bold text-gray-800 text-xl mb-8"
+                href="#">
+                About
+            </a>
+
+            <p class="mt-8 mb-8">Home to a collection of art that spans centuries and the globe, the Art Institute of Chicago is located in the heart of the city—and is one of Tripadvisor’s “Best of the Best” US attractions of 2023.
+            </p>
+
+            <p class="mb-8">Explore thousands of artworks in the museum’s collection—from our renowned icons to lesser-known works from every corner of the globe—as well as our books, writings, reference materials, and other resources.</p>
+
+        </div>
+
+    </section>
+
+    <app-footer></app-footer>
+
+</div>
+
+<!-- 
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+    <div *ngFor="let artwork of artworks"  routerLink="../art/{{artwork.id}}">
+        <img class="h-auto max-w-full rounded-lg object-cover" [src]="imageUrl + '/' + artwork.imageId + '/full/' + imageSize + ',/0/default.jpg'" alt="">
+    </div>
+</div> -->
